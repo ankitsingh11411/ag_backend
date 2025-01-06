@@ -12,7 +12,7 @@ const addCar = async (req, res) => {
       horsepower,
       torque,
     } = req.body;
-    const image = req.file ? req.file.path : null; // Get the image path from Multer
+    const image = req.file ? req.file.path : null;
 
     const car = new Car({
       brand,
@@ -29,6 +29,35 @@ const addCar = async (req, res) => {
     res.status(201).json(car);
   } catch (err) {
     res.status(500).json({ error: 'Failed to add car', details: err.message });
+  }
+};
+
+// Upload car sounds
+const uploadCarSound = async (req, res) => {
+  try {
+    const carId = req.params.id;
+    const soundFile = req.file ? req.file.path : null;
+
+    if (!soundFile) {
+      return res.status(400).json({ error: 'No sound file uploaded' });
+    }
+
+    const car = await Car.findById(carId);
+    if (!car) {
+      return res.status(404).json({ error: 'Car not found' });
+    }
+
+    car.sounds.push(soundFile); // Add the sound file path to the sounds array
+    await car.save();
+
+    res.status(200).json({
+      message: 'Sound file uploaded successfully',
+      sounds: car.sounds,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: 'Failed to upload car sound', details: err.message });
   }
 };
 
@@ -59,7 +88,24 @@ const getCarById = async (req, res) => {
   }
 };
 
-// Update a car by ID
+// Get car sounds by ID
+const getCarSounds = async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).json({ error: 'Car not found' });
+    }
+
+    const sounds = car.sounds || [];
+    res.status(200).json({ sounds });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: 'Failed to fetch car sounds', details: err.message });
+  }
+};
+
+// Update a car
 const updateCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndUpdate(req.params.id, req.body, {
@@ -76,7 +122,7 @@ const updateCar = async (req, res) => {
   }
 };
 
-// Delete a car by ID
+// Delete a car
 const deleteCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndDelete(req.params.id);
@@ -91,4 +137,12 @@ const deleteCar = async (req, res) => {
   }
 };
 
-module.exports = { addCar, getCars, getCarById, updateCar, deleteCar };
+module.exports = {
+  addCar,
+  getCars,
+  getCarById,
+  getCarSounds,
+  updateCar,
+  deleteCar,
+  uploadCarSound, // Export the new method
+};

@@ -1,21 +1,32 @@
 const jwt = require('jsonwebtoken');
+const Admin = require('../models/Admin');
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(403).json({ error: 'No token provided' });
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Access denied. No token provided.' });
+  }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  });
+  } catch (err) {
+    res.status(403).json({ error: 'Invalid or expired token.' });
+  }
 };
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required' });
+const isAdmin = async (req, res, next) => {
+  try {
+    const admin = await Admin.findById(req.user.id);
+    if (admin) {
+      next();
+    } else {
+      res.status(403).json({ error: 'Access denied. Admins only.' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
-  next();
 };
 
 module.exports = { verifyToken, isAdmin };

@@ -10,6 +10,7 @@ const carSchema = new mongoose.Schema(
     horsepower: { type: Number, required: true },
     torque: { type: Number, required: true },
     image: { type: String },
+    sounds: { type: [String], default: [] }, // Array to store sound file paths/URLs
   },
   { timestamps: true }
 );
