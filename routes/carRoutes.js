@@ -6,22 +6,15 @@ const {
   updateCar,
   deleteCar,
 } = require('../controllers/carController');
-const router = express.Router();
 const upload = require('../middleware/upload');
+const { verifyToken, isAdmin } = require('../middleware/auth');
+const router = express.Router();
 
-// Add a new car
-router.post('/add', upload.single('image'), addCar);
-
-// Get all cars
 router.get('/', getCars);
-
-// Get a car by ID
 router.get('/:id', getCarById);
 
-// Update a car by ID
-router.put('/:id', updateCar);
-
-// Delete a car by ID
-router.delete('/:id', deleteCar);
+router.post('/add', verifyToken, isAdmin, upload.single('image'), addCar);
+router.put('/:id', verifyToken, isAdmin, updateCar);
+router.delete('/:id', verifyToken, isAdmin, deleteCar);
 
 module.exports = router;
