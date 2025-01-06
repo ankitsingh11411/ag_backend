@@ -6,7 +6,7 @@ const {
   updateCar,
   deleteCar,
   getCarSounds,
-  uploadCarSound, // Import the new method
+  uploadCarSound,
 } = require('../controllers/carController');
 const upload = require('../middleware/upload');
 const { verifyToken, isAdmin } = require('../middleware/auth');
@@ -19,10 +19,8 @@ router.post('/add', verifyToken, isAdmin, upload.single('image'), addCar); // Ad
 router.put('/:id', verifyToken, isAdmin, updateCar); // Admin only
 router.delete('/:id', verifyToken, isAdmin, deleteCar); // Admin only
 
-// Route for car sounds (requires login)
 router.get('/:id/sounds', verifyToken, getCarSounds);
 
-// Route for uploading car sounds (Admin only)
 router.post(
   '/:id/sounds',
   verifyToken,
