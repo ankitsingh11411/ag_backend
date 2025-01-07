@@ -36,30 +36,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-// Register an admin (optional, for seeding new admins)
-const registerAdmin = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    // Check if the admin already exists
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) {
-      return res.status(400).json({ error: 'Admin already exists' });
-    }
-
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create and save the admin
-    const admin = new Admin({ email, password: hashedPassword });
-    await admin.save();
-
-    res.status(201).json({ message: 'Admin registered successfully' });
-  } catch (err) {
-    console.error('Registration Error:', err.message);
-    res
-      .status(500)
-      .json({ error: 'Registration failed', details: err.message });
-  }
-};
-
-module.exports = { adminLogin, registerAdmin };
+module.exports = { adminLogin };
