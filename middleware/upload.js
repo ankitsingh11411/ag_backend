@@ -1,7 +1,6 @@
 const multer = require('multer');
 const path = require('path');
 
-// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir =
@@ -13,7 +12,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter for valid formats
 const fileFilter = (req, file, cb) => {
   const validExtensions = ['.jpg', '.jpeg', '.png', '.mp3', '.wav'];
   const ext = path.extname(file.originalname).toLowerCase();

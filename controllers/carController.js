@@ -1,6 +1,5 @@
 const Car = require('../models/Car');
 
-// Add a new car
 const addCar = async (req, res) => {
   try {
     const {
@@ -32,7 +31,6 @@ const addCar = async (req, res) => {
   }
 };
 
-// Upload car sounds
 const uploadCarSound = async (req, res) => {
   try {
     const carId = req.params.id;
@@ -47,7 +45,7 @@ const uploadCarSound = async (req, res) => {
       return res.status(404).json({ error: 'Car not found' });
     }
 
-    car.sounds.push(soundFile); // Add the sound file path to the sounds array
+    car.sounds.push(soundFile);
     await car.save();
 
     res.status(200).json({
@@ -61,7 +59,6 @@ const uploadCarSound = async (req, res) => {
   }
 };
 
-// Get all cars
 const getCars = async (req, res) => {
   try {
     const cars = await Car.find();
@@ -73,7 +70,6 @@ const getCars = async (req, res) => {
   }
 };
 
-// Get a car by ID
 const getCarById = async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
@@ -88,7 +84,6 @@ const getCarById = async (req, res) => {
   }
 };
 
-// Get car sounds by ID
 const getCarSounds = async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
@@ -105,7 +100,6 @@ const getCarSounds = async (req, res) => {
   }
 };
 
-// Update a car
 const updateCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndUpdate(req.params.id, req.body, {
@@ -122,7 +116,6 @@ const updateCar = async (req, res) => {
   }
 };
 
-// Delete a car
 const deleteCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndDelete(req.params.id);
@@ -144,5 +137,5 @@ module.exports = {
   getCarSounds,
   updateCar,
   deleteCar,
-  uploadCarSound, // Export the new method
+  uploadCarSound,
 };
