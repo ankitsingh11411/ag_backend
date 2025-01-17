@@ -5,7 +5,8 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const carRoutes = require('./routes/carRoutes');
 const authRoutes = require('./routes/authRoutes');
-const seedAdmins = require('./seedAdmins'); // Import the function
+const seedAdmins = require('./seedAdmins');
+const path = require('path');
 
 dotenv.config();
 
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -11,7 +11,7 @@ const addCar = async (req, res) => {
       horsepower,
       torque,
     } = req.body;
-    const image = req.file ? req.file.path : null;
+    const image = req.file ? `images/${req.file.filename}` : null; // Save relative path
 
     const car = new Car({
       brand,
