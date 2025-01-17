@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const carRoutes = require('./routes/carRoutes');
 const authRoutes = require('./routes/authRoutes');
+const seedAdmins = require('./seedAdmins'); // Import the function
 
 dotenv.config();
 
@@ -14,13 +15,16 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const MONGO_URI = process.env.MONGO_URI;
-const JWT_SECRET = process.env.JWT_SECRET;
 const port = process.env.PORT || 3000;
 
 mongoose
   .connect(MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('Database connection error:', err));
+  .then(async () => {
+    console.log('MongoDB connected');
+    await seedAdmins();
+    console.log('Admin seeding completed.');
+  })
+  .catch((err) => console.error('Database connection or seeding error:', err));
 
 app.get('/', (req, res) => {
   res.send('API running properly!');

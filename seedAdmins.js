@@ -25,17 +25,24 @@ const seedAdmins = async () => {
     }
 
     console.log('Admins seeded successfully.');
-    process.exit();
   } catch (err) {
     console.error('Error seeding admins:', err);
-    process.exit(1);
+    throw err;
   }
 };
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB.');
-    seedAdmins();
-  })
-  .catch((err) => console.error('Failed to connect to MongoDB:', err));
+module.exports = seedAdmins;
+
+if (require.main === module) {
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+      console.log('Connected to MongoDB.');
+      return seedAdmins();
+    })
+    .then(() => process.exit())
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB or seed admins:', err);
+      process.exit(1);
+    });
+}
