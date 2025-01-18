@@ -24,7 +24,6 @@ app.use(
 app.use(bodyParser.json());
 
 const MONGO_URI = process.env.MONGO_URI;
-const port = process.env.PORT || 3000;
 
 mongoose
   .connect(MONGO_URI)
@@ -43,6 +42,4 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;
