@@ -8,6 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const seedAdmins = require('./seedAdmins');
 const path = require('path');
 
+require('dotenv').config();
+
 dotenv.config();
 
 const app = express();
