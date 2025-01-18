@@ -8,15 +8,16 @@ const authRoutes = require('./routes/authRoutes');
 const seedAdmins = require('./seedAdmins');
 const path = require('path');
 
-require('dotenv').config();
-
 dotenv.config();
 
 const app = express();
 
+app.use(express.json());
+const clienturl = process.env.CLIENT_URL || 'http://localhost:3000';
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: clienturl,
     credentials: true,
   })
 );
